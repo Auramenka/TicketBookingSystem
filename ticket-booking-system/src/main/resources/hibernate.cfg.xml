@@ -17,5 +17,6 @@
         <mapping class="com.innowise.ticketbookingsystem.model.Seance"/>
         <mapping class="com.innowise.ticketbookingsystem.model.Event"/>
         <mapping class="com.innowise.ticketbookingsystem.model.Seat"/>
+        <mapping class="com.innowise.ticketbookingsystem.model.SeatSeance"/>
     </session-factory>
 </hibernate-configuration>

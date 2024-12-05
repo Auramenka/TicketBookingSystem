@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.EventDto" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -54,21 +56,18 @@
             padding: 10px;
             margin: 10px;
             border-radius: 5px;
-            width: calc(50% - 20px);
-            box-sizing: border-box;
             display: flex;
-            flex-direction: column;
             align-items: center;
+            width: 80%;
+            box-sizing: border-box;
         }
         .event img {
-            width: 100%;
-            max-width: 300px;
+            width: 300px;
             height: auto;
-            display: block;
-            margin-bottom: 15px;
+            margin-right: 20px;
         }
         .event-details {
-            text-align: center;
+            text-align: left;
         }
         .event .event-date {
             display: block;
@@ -87,6 +86,9 @@
         }
         .event .more-button:hover {
             background-color: #0056b3;
+        }
+        .spacing {
+            margin-top: 20px;
         }
         .pagination {
             text-align: center;
@@ -118,10 +120,25 @@
             <h1><%= event.getName() %></h1>
             <span class="event-date"><strong>с <%= event.getDateStart() %> по <%= event.getDateEnd() %></strong></span>
             <p><%= event.getDescription() %></p>
-            <a href="events" class="more-button">Назад к событиям</a>
+            <a href="/events" class="more-button">Назад к событиям</a>
+            <a href="/seance?eventId=<%= event.getId() %>" class="more-button">Просмотр доступных сеансов</a>
+
+            <div class="spacing"></div>
+
+            <div class="header-title-container">
+                <%
+                    UserDto user = (UserDto) session.getAttribute("user");
+                    if (user != null && Role.ADMIN == user.getRole()) {
+                %>
+                <a href="addSeance.jsp?eventId=<%= event.getId() %>" class="login-button">Добавить сеанс</a>
+                <%
+                    }
+                %>
+            </div>
         </div>
     </div>
 </div>
+
 <%
 } else {
 %>

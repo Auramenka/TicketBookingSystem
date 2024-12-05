@@ -2,8 +2,8 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.EventDto" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.User" %>
 <%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -29,11 +29,11 @@
         }
         .tabs {
             display: flex;
-            justify-content: flex-start; /* Изменено с flex-end на flex-start */
+            justify-content: flex-start;
             flex-grow: 1;
         }
         .tab {
-            margin-right: 20px; /* Изменено с margin-left на margin-right */
+            margin-right: 20px;
             color: white;
             text-decoration: none;
             padding: 10px;
@@ -113,6 +113,15 @@
             background-color: #007bff;
             color: white;
         }
+        .header-title-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        .header-title {
+            margin-right: 20px;
+        }
     </style>
 </head>
 <body>
@@ -120,7 +129,7 @@
 <div class="header">
     <div class="tabs">
         <%
-            User user = (User) session.getAttribute("user");
+            UserDto user = (UserDto) session.getAttribute("user");
             if (user == null) {
         %>
         <a href="?category=movies" class="tab">Кино</a>
@@ -131,11 +140,11 @@
             if (Role.USER == user.getRole()) {
         %>
         <a href="myOrders.jsp" class="tab">Мои заказы</a>
-        <a href="profile.jsp" class="tab">Профиль</a>
+        <a href="profile?userId=<%= user.getId() %>" class="tab">Профиль</a>
         <%
         } else if (Role.ADMIN == user.getRole()) {
         %>
-        <a href="events.jsp" class="tab">Мероприятия</a>
+        <a href="/manageEvents" class="tab">Управление мероприятиями</a>
         <%
                 }
             }
@@ -149,15 +158,17 @@
         <%
         } else {
         %>
-        <a href="logout.jsp" class="login-button">Выход</a>
+        <a href="logout" class="login-button">Выход</a>
         <%
             }
         %>
     </div>
 </div>
-</body>
 
-<h1 style="text-align: center;">Список мероприятий</h1>
+<div class="header-title-container">
+    <h1 class="header-title">Список мероприятий</h1>
+</div>
+
 <div class="event-container">
     <%
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -173,6 +184,13 @@
             <span class="event-date"><strong>с <%= dateStartFormatted %> по <%= dateEndFormatted %></strong></span>
             <span><strong><%= event.getName() %></strong></span>
             <a href="eventDetail?id=<%= event.getId() %>" class="more-button">Подробнее</a>
+            <%
+                if (user != null && Role.ADMIN == user.getRole()) {
+            %>
+            <a href="editEvent?id=<%= event.getId() %>" class="more-button">Редактирование</a>
+            <%
+                }
+            %>
         </div>
     </div>
     <%

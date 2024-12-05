@@ -1,5 +1,7 @@
 package com.innowise.ticketbookingsystem.service.impl;
 
+import com.innowise.ticketbookingsystem.dto.UserDto;
+import com.innowise.ticketbookingsystem.mappers.UserMapper;
 import com.innowise.ticketbookingsystem.model.User;
 import com.innowise.ticketbookingsystem.repository.UserRepository;
 import com.innowise.ticketbookingsystem.repository.impl.UserRepositoryImpl;
@@ -31,8 +33,12 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserDto findByUsername(String username) {
+        return UserMapper.toDto(userRepository.findByUsername(username));
+    }
+
+    public UserDto findById(Long id) {
+        return UserMapper.toDto(userRepository.findById(id));
     }
 
     public boolean isUsernameExists(String username) {

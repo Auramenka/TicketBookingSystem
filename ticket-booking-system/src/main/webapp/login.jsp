@@ -5,7 +5,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Вход</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
   <style>
     body {
       background-color: #f4f4f4;
@@ -53,6 +52,11 @@
     .btn:hover {
       background-color: #4cae4c;
     }
+    .error-message {
+      color: red;
+      font-size: 12px;
+      margin-top: 5px;
+    }
     .footer {
       text-align: center;
       margin-top: 15px;
@@ -65,11 +69,17 @@
   <form action="login" method="post">
     <div class="input-group">
       <label for="username">Имя пользователя</label>
-      <input type="text" id="username" name="username" required>
+      <input type="text" id="username" name="username" value="<%= request.getAttribute("username") != null ? request.getAttribute("username") : "" %>" required>
+      <% if (request.getAttribute("usernameError") != null) { %>
+      <div class="error-message"><%= request.getAttribute("usernameError") %></div>
+      <% } %>
     </div>
     <div class="input-group">
       <label for="password">Пароль</label>
-      <input type="password" id="password" name="password" required>
+      <input type="password" id="password" name="password" value="<%= request.getAttribute("password") != null ? request.getAttribute("password") : "" %>" required>
+      <% if (request.getAttribute("passwordError") != null) { %>
+      <div class="error-message"><%= request.getAttribute("passwordError") %></div>
+      <% } %>
     </div>
     <button type="submit" class="btn">Войти</button>
   </form>

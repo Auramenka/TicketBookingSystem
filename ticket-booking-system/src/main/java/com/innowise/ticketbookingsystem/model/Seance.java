@@ -32,4 +32,8 @@ public class Seance {
             inverseJoinColumns = @JoinColumn(name = "seat_id")
     )
     private List<Seat> seats = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id")
+    private Event event;
 }

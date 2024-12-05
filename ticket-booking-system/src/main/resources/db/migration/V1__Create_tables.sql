@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS orders (
     id SERIAL PRIMARY KEY,
     user_id int not null,
     event_id int not null,
+    seat_seance_id int not null,
     status varchar
 );
 
@@ -27,13 +28,14 @@ CREATE TABLE IF NOT EXISTS seats (
     id SERIAL PRIMARY KEY,
     seat_number int,
     row_number int,
-    is_occupied int
+    is_occupied boolean not null default false
 );
 
 CREATE TABLE IF NOT EXISTS seances (
     id SERIAL PRIMARY KEY,
     date_start date,
-    time_start time
+    time_start time,
+    event_id int not null
 );
 
 CREATE TABLE IF NOT EXISTS seat_seance (

@@ -15,6 +15,7 @@ public class EventMapper {
         event.setDescription(eventDto.getDescription());
         event.setDateStart(eventDto.getDateStart());
         event.setDateEnd(eventDto.getDateEnd());
+        event.setCategory(eventDto.getCategory());
         event.setPhoto(eventDto.getPhoto());
         return event;
     }
@@ -26,6 +27,7 @@ public class EventMapper {
         eventDto.setDescription(event.getDescription());
         eventDto.setDateStart(event.getDateStart());
         eventDto.setDateEnd(event.getDateEnd());
+        eventDto.setCategory(event.getCategory());
         eventDto.setPhoto(event.getPhoto());
         return eventDto;
     }

@@ -1,6 +1,6 @@
 package com.innowise.ticketbookingsystem.controller;
 
-import com.innowise.ticketbookingsystem.model.User;
+import com.innowise.ticketbookingsystem.dto.UserDto;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
@@ -23,15 +23,26 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        User user = userService.findByUsername(username);
+        UserDto user = userService.findByUsername(username);
 
-        if (user != null && BCrypt.checkpw(password, user.getPassword())) {
-            HttpSession session = req.getSession();
-            session.setAttribute("user", user);
-            resp.sendRedirect("/events");
-        } else {
-            req.setAttribute("errorMessage", "Неверное имя пользователя или пароль.");
-            req.getRequestDispatcher("login.jsp").forward(req, resp);
+        if (user == null) {
+            req.setAttribute("usernameError", "Пользователь с таким именем не существует");
+            req.setAttribute("username", username);
+            req.setAttribute("password", password);
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            return;
         }
+
+        if (!BCrypt.checkpw(password, user.getPassword())) {
+            req.setAttribute("passwordError", "Неверный пароль");
+            req.setAttribute("username", username);
+            req.setAttribute("password", password);
+            req.getRequestDispatcher("/login.jsp").forward(req, resp);
+            return;
+        }
+
+        HttpSession session = req.getSession();
+        session.setAttribute("user", user);
+        resp.sendRedirect("/events");
     }
 }

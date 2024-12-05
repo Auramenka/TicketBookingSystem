@@ -11,8 +11,19 @@ VALUES
 
 INSERT INTO seats (seat_number, row_number, is_occupied)
 VALUES
-(1, 1, 0), (2, 1, 0), (3, 1, 0), (4, 1, 0), (5, 1, 0),
-(1, 2, 0), (2, 2, 0), (3, 2, 0), (4, 2, 0), (5, 2, 0),
-(1, 3, 0), (2, 3, 0), (3, 3, 0), (4, 3, 0), (5, 3, 0),
-(1, 4, 0), (2, 4, 0), (3, 4, 0), (4, 4, 0), (5, 4, 0),
-(1, 5, 0), (2, 5, 0), (3, 5, 0), (4, 5, 0), (5, 5, 0);
+(1, 1, false), (2, 1, false), (3, 1, false), (4, 1, false), (5, 1, false),
+(1, 2, false), (2, 2, false), (3, 2, false), (4, 2, false), (5, 2, false),
+(1, 3, false), (2, 3, false), (3, 3, false), (4, 3, false), (5, 3, false),
+(1, 4, false), (2, 4, false), (3, 4, false), (4, 4, false), (5, 4, false),
+(1, 5, false), (2, 5, false), (3, 5, false), (4, 5, false), (5, 5, false);
+
+INSERT INTO users (username, password, email, role)
+VALUES
+('Hanna', '$2a$10$LdWJdL.QvVAlA7bnuma4jeyv44G8XPmgzN4I.nXu9qKzBjsBtHvfu', 'hanna@gmail.com', 'ADMIN');
+
+INSERT INTO seances(date_start, time_start, event_id)
+VALUES
+('2024-12-05', '13:34:00', 1),
+('2024-12-18', '16:45:00', 2),
+('2024-12-20', '19:55:00', 3),
+('2024-12-20', '11:00:00', 4);

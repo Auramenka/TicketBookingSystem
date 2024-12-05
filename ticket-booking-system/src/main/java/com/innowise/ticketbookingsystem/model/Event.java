@@ -39,5 +39,8 @@ public class Event {
 
     @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
+
+    @OneToMany(mappedBy = "event", fetch = FetchType.LAZY)
+    private List<Seance> seances = new ArrayList<>();
 }
 

@@ -15,6 +15,32 @@ public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository = new EventRepositoryImpl();
 
+    public void addEvent(EventDto eventDto) {
+        Event event = new Event();
+        event.setName(eventDto.getName());
+        event.setDescription(eventDto.getDescription());
+        event.setDateStart(eventDto.getDateStart());
+        event.setDateEnd(eventDto.getDateEnd());
+        event.setCategory(eventDto.getCategory());
+        event.setPhoto(eventDto.getPhoto());
+        eventRepository.save(event);
+    }
+
+    public void updateEvent(EventDto eventDto) {
+        Event event = eventRepository.findById(eventDto.getId());
+        if (event != null) {
+            event.setId(eventDto.getId());
+            event.setName(eventDto.getName());
+            event.setDescription(eventDto.getDescription());
+            event.setDateStart(eventDto.getDateStart());
+            event.setDateEnd(eventDto.getDateEnd());
+            event.setCategory(eventDto.getCategory());
+            event.setPhoto(eventDto.getPhoto());
+            eventRepository.update(event);
+        }
+    }
+
+
     public List<EventDto> getEventsByCategory(Category category) {
         List<Event> events = eventRepository.findByCategory(category);
         return events.stream()
