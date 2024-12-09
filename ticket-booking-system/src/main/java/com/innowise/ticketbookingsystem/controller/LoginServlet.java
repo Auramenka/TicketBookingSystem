@@ -23,26 +23,23 @@ public class LoginServlet extends HttpServlet {
         String username = req.getParameter("username");
         String password = req.getParameter("password");
 
-        UserDto user = userService.findByUsername(username);
+        try {
+            UserDto userDto = userService.findByUsername(username);
 
-        if (user == null) {
-            req.setAttribute("usernameError", "Пользователь с таким именем не существует");
-            req.setAttribute("username", username);
-            req.setAttribute("password", password);
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
-            return;
+            if (!BCrypt.checkpw(password, userDto.getPassword())) {
+                req.setAttribute("passwordError", "Неверный пароль");
+            } else {
+                HttpSession session = req.getSession();
+                session.setAttribute("userDto", userDto);
+                resp.sendRedirect("/events");
+                return;
+            }
+        } catch (RuntimeException e) {
+            req.setAttribute("usernameError", e.getMessage());
         }
 
-        if (!BCrypt.checkpw(password, user.getPassword())) {
-            req.setAttribute("passwordError", "Неверный пароль");
-            req.setAttribute("username", username);
-            req.setAttribute("password", password);
-            req.getRequestDispatcher("/login.jsp").forward(req, resp);
-            return;
-        }
-
-        HttpSession session = req.getSession();
-        session.setAttribute("user", user);
-        resp.sendRedirect("/events");
+        req.setAttribute("username", username);
+        req.setAttribute("password", password);
+        req.getRequestDispatcher("/login.jsp").forward(req, resp);
     }
 }

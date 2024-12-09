@@ -1,5 +1,6 @@
 package com.innowise.ticketbookingsystem.controller;
 
+import com.innowise.ticketbookingsystem.dto.UserDto;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
@@ -43,7 +44,12 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
 
-        userService.registerUser(username, email, password);
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setEmail(email);
+        userDto.setPassword(password);
+
+        userService.registerUser(userDto);
 
         resp.sendRedirect("/registrationSuccess.jsp");
     }

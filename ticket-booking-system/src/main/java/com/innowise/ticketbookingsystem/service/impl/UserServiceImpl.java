@@ -12,21 +12,23 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository = new UserRepositoryImpl();
 
-    public void registerUser(String username, String email, String password) {
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt());
-        User user = new User();
-        user.setUsername(username);
-        user.setEmail(email);
-        user.setPassword(hashedPassword);
+    public void registerUser(UserDto userDto) {
+        String hashedPassword = BCrypt.hashpw(userDto.getPassword(), BCrypt.gensalt());
+        userDto.setPassword(hashedPassword);
+        User user = UserMapper.toEntity(userDto);
         userRepository.save(user);
     }
 
-    public void updateUser(User user) {
-        User existingUser = userRepository.findById(user.getId());
-        if (existingUser == null) {
+    public void updateUser(UserDto userDto) {
+        User userFromDb = userRepository.findById(userDto.getId());
+        if (userFromDb != null) {
+            userFromDb.setId(userDto.getId());
+            userFromDb.setUsername(userDto.getUsername());
+            userFromDb.setEmail(userDto.getEmail());
+            userRepository.update(userFromDb);
+        } else {
             throw new IllegalArgumentException("Пользователь не найден");
         }
-        userRepository.update(user);
     }
 
     public void deleteUser(Long id) {
@@ -34,7 +36,11 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto findByUsername(String username) {
-        return UserMapper.toDto(userRepository.findByUsername(username));
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new RuntimeException("Пользователь с именем '" + username + "' не найден");
+        }
+        return UserMapper.toDto(user);
     }
 
     public UserDto findById(Long id) {

@@ -7,17 +7,17 @@ public class SeatMapper {
 
     public static Seat toEntity(SeatDto seatDto) {
         Seat seat = new Seat();
+        seat.setId(seatDto.getId());
         seat.setSeatNumber(seatDto.getSeatNumber());
         seat.setRowNumber(seatDto.getRowNumber());
-        seat.setIsOccupied(seatDto.getIsOccupied());
         return seat;
     }
 
     public static SeatDto toDto(Seat seat) {
         SeatDto seatDto = new SeatDto();
+        seatDto.setId(seat.getId());
         seatDto.setSeatNumber(seat.getSeatNumber());
         seatDto.setRowNumber(seat.getRowNumber());
-        seatDto.setIsOccupied(seat.getIsOccupied());
         return seatDto;
     }
 }

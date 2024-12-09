@@ -1,6 +1,7 @@
 package com.innowise.ticketbookingsystem.controller;
 
 import com.innowise.ticketbookingsystem.dto.UserDto;
+import com.innowise.ticketbookingsystem.model.User;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
 import jakarta.servlet.ServletException;
@@ -29,7 +30,7 @@ public class ProfileServlet extends HttpServlet {
             return;
         }
 
-        req.setAttribute("user", user);
+        req.setAttribute("userDto", user);
         req.getRequestDispatcher("/profile.jsp").forward(req, resp);
     }
 }

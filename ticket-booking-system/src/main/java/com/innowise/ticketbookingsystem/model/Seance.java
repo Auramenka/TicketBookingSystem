@@ -6,8 +6,6 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Entity
 @Table(name = "seances")
@@ -24,14 +22,6 @@ public class Seance {
 
     @Column(name = "time_start")
     private LocalTime timeStart;
-
-    @ManyToMany
-    @JoinTable(
-            name = "seat_seance",
-            joinColumns = @JoinColumn(name = "seance_id"),
-            inverseJoinColumns = @JoinColumn(name = "seat_id")
-    )
-    private List<Seat> seats = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "event_id")

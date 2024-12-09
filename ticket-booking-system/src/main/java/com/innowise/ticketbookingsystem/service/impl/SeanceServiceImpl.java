@@ -34,6 +34,15 @@ public class SeanceServiceImpl implements SeanceService {
         }
     }
 
+    @Override
+    public void deleteServiceById(Long id) {
+        seanceRepository.deleteById(id);
+    }
+
+    public Seance getSeanceById(Long seanceId) {
+        return seanceRepository.findById(seanceId);
+    }
+
     public List<SeanceDto> getSeances() {
         List<Seance> seances = seanceRepository.getAllSeances();
         return seances.stream()

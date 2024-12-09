@@ -27,6 +27,6 @@ public class Order {
     private Event event;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seat_seance_id")
-    private SeatSeance seatSeance;
+    @JoinColumn(name = "booking_id")
+    private Booking booking;
 }

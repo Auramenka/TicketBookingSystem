@@ -2,6 +2,11 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.SeanceDto" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%
+    Long eventId = Long.parseLong(request.getParameter("eventId"));
+%>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -49,6 +54,18 @@
         .login-button:hover {
             background-color: #0056b3;
         }
+        .add-seance-button {
+            background-color: #28a745;
+        }
+        .add-seance-button:hover {
+            background-color: #218838;
+        }
+        .delete-seance-button {
+            background-color: #dc3545;
+        }
+        .delete-seance-button:hover {
+            background-color: #c82333;
+        }
         .seance-container {
             display: flex;
             flex-wrap: wrap;
@@ -94,12 +111,21 @@
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
         List<SeanceDto> seances = (List<SeanceDto>) request.getAttribute("seances");
         if (seances != null && !seances.isEmpty()) {
+            UserDto userDto = (UserDto) session.getAttribute("userDto");
+            boolean isAdmin = userDto != null && Role.ADMIN == userDto.getRole();
             for (SeanceDto seance : seances) {
                 String dateStartFormatted = seance.getDateStart() != null ? seance.getDateStart().format(dateFormatter) : "Нет даты начала";
                 String timeStartFormatted = seance.getTimeStart() != null ? seance.getTimeStart().format(timeFormatter) : "Нет времени начала";
     %>
     <div class="seance">
-        <span class="seance-date"><strong>Дата: <%= dateStartFormatted %>, Начало сеанса: <a href="/seats"><%= timeStartFormatted %></a></strong></span>
+        <span class="seance-date"><strong>Дата: <%= dateStartFormatted %>, Начало сеанса: <a href="/bookSeats?seanceId=<%= seance.getId() %>"><%= timeStartFormatted %></a></strong></span>
+        <%
+            if (isAdmin) {
+        %>
+        <a href="/deleteSeance?id=<%= seance.getId() %>" class="login-button delete-seance-button">Удалить сеанс</a>
+        <%
+            }
+        %>
     </div>
     <%
         }
@@ -113,6 +139,14 @@
 </div>
 
 <div style="text-align: center; margin-bottom: 20px;">
+    <%
+        UserDto userDto = (UserDto) session.getAttribute("userDto");
+        if (userDto != null && Role.ADMIN == userDto.getRole()) {
+    %>
+    <a href="/addSeance?eventId=<%= eventId %>" class="login-button add-seance-button">Добавить сеанс</a>
+    <%
+        }
+    %>
     <a href="/events" class="login-button">Перейти на главную страницу</a>
 </div>
 

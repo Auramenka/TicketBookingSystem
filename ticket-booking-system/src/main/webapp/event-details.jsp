@@ -1,7 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.EventDto" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
-<%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -122,23 +120,9 @@
             <p><%= event.getDescription() %></p>
             <a href="/events" class="more-button">Назад к событиям</a>
             <a href="/seance?eventId=<%= event.getId() %>" class="more-button">Просмотр доступных сеансов</a>
-
-            <div class="spacing"></div>
-
-            <div class="header-title-container">
-                <%
-                    UserDto user = (UserDto) session.getAttribute("user");
-                    if (user != null && Role.ADMIN == user.getRole()) {
-                %>
-                <a href="addSeance.jsp?eventId=<%= event.getId() %>" class="login-button">Добавить сеанс</a>
-                <%
-                    }
-                %>
-            </div>
         </div>
     </div>
 </div>
-
 <%
 } else {
 %>

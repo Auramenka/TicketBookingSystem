@@ -3,7 +3,6 @@ package com.innowise.ticketbookingsystem.controller;
 import com.innowise.ticketbookingsystem.dto.EventDto;
 import com.innowise.ticketbookingsystem.service.EventService;
 import com.innowise.ticketbookingsystem.service.impl.EventServiceImpl;
-import com.innowise.ticketbookingsystem.util.BookingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -12,27 +11,25 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/eventDetail")
-public class EventDetailServlet extends HttpServlet {
+@WebServlet("/deleteEvent")
+public class DeleteEventServlet extends HttpServlet {
 
     private final EventService eventService = new EventServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String eventIdParam = req.getParameter("id");
-        EventDto event;
+        Long id = Long.parseLong(req.getParameter("id"));
+        EventDto eventDto = eventService.getEventById(id);
 
-        if (eventIdParam != null) {
-            Long eventId = Long.valueOf(eventIdParam);
-            event = eventService.getEventById(eventId);
+        req.setAttribute("eventDto", eventDto);
+        req.getRequestDispatcher("/deleteEvent.jsp").forward(req, resp);
+    }
 
-            BookingUtil.put("eventName", event.getName());
-        } else {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Event ID is missing");
-            return;
-        }
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        Long id = Long.parseLong(req.getParameter("id"));
+        eventService.deleteEventById(id);
 
-        req.setAttribute("event", event);
-        req.getRequestDispatcher("/event-details.jsp").forward(req, resp);
+        resp.sendRedirect("/events");
     }
 }

@@ -5,32 +5,77 @@
 %>
 <html>
 <head>
-    <title>Изменить мероприятие</title>
+    <title>Редактирование мероприятия</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        h2 {
+            color: #333;
+            text-align: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin: 10px 0 5px;
+        }
+        input[type="text"],
+        input[type="date"],
+        textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0 20px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"] {
+            background-color: #5cb85c;
+            color: white;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+    </style>
 </head>
 <body>
-<h2>Edit Event</h2>
+<h2>Редактирование мероприятия</h2>
 <form action="editEvent" method="post">
     <input type="hidden" name="id" value="<%= eventDto.getId() %>"/>
 
-    <label for="name">Name:</label>
-    <input type="text" name="name" value="<%= eventDto.getName() %>" required/><br/>
+    <label for="name">Название:</label>
+    <input type="text" name="name" value="<%= eventDto.getName() %>" required/>
 
-    <label for="description">Description:</label>
-    <textarea name="description" required><%= eventDto.getDescription() %></textarea><br/>
+    <label for="description">Описание:</label>
+    <textarea name="description" required><%= eventDto.getDescription() %></textarea>
 
-    <label for="dateStart">Start Date:</label>
-    <input type="date" name="dateStart" value="<%= eventDto.getDateStart() %>" required/><br/>
+    <label for="dateStart">Дата начала:</label>
+    <input type="date" name="dateStart" value="<%= eventDto.getDateStart() %>" required/>
 
-    <label for="dateEnd">End Date:</label>
-    <input type="date" name="dateEnd" value="<%= eventDto.getDateEnd() %>" required/><br/>
+    <label for="dateEnd">Дата окончания:</label>
+    <input type="date" name="dateEnd" value="<%= eventDto.getDateEnd() %>" required/>
 
-    <label for="category">Category:</label>
-    <input type="text" name="category" value="<%= eventDto.getCategory() %>" required/><br/>
+    <label for="category">Категория:</label>
+    <input type="text" name="category" value="<%= eventDto.getCategory() %>" required/>
 
-    <label for="photo">Photo:</label>
-    <input type="text" name="photo" value="<%= eventDto.getPhoto() %>" required/><br/>
+    <label for="photo">Ссылка на фото:</label>
+    <input type="text" name="photo" value="<%= eventDto.getPhoto() %>" required/>
 
-    <input type="submit" value="Update Event"/>
+    <input type="submit" value="Обновить мероприятие"/>
 </form>
 </body>
 </html>

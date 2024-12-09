@@ -9,21 +9,21 @@ FOREIGN KEY (event_id)
 REFERENCES events(id);
 
 ALTER TABLE orders
-ADD CONSTRAINT fk_seat_seance_id
-FOREIGN KEY (seat_seance_id)
-REFERENCES seat_seance(id);
+ADD CONSTRAINT fk_booking_id
+FOREIGN KEY (booking_id)
+REFERENCES booking(id);
 
 ALTER TABLE seances
 ADD CONSTRAINT fk_event_id
 FOREIGN KEY (event_id)
 REFERENCES events(id);
 
-ALTER TABLE seat_seance
+ALTER TABLE booking
 ADD CONSTRAINT fk_seat_id
 FOREIGN KEY (seat_id)
 REFERENCES seats(id);
 
-ALTER TABLE seat_seance
+ALTER TABLE booking
 ADD CONSTRAINT fk_seance_id
 FOREIGN KEY (seance_id)
 REFERENCES seances(id);

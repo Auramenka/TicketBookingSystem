@@ -1,8 +1,12 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.SeatDto" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <%
     List<SeatDto> seats = (List<SeatDto>) request.getAttribute("seats");
+    UserDto user = (UserDto) session.getAttribute("userDto");
+    boolean isUser = (user != null && Role.USER == user.getRole());
 %>
 <html>
 <head>
@@ -34,8 +38,7 @@
             background-color: #f2f2f2;
         }
         .occupied {
-            background-color: black;
-            color: white;
+            background-color: gray;
         }
         input[type="checkbox"] {
             cursor: pointer;
@@ -49,8 +52,8 @@
     </style>
 </head>
 <body>
-<h2>Выберите место(а)</h2>
-<form action="seats" method="get">
+<h2>Выбор мест в кинозале</h2>
+<form action="/bookSeats" method="post">
     <table border="1">
         <tr>
             <th>Номер ряда</th>
@@ -73,8 +76,14 @@
         %>
     </table>
     <div class="button-container">
+        <%
+            if (isUser) {
+        %>
         <input type="submit" class="button" value="Забронировать" />
-        <input type="button" class="button" value="Купить" />
+        <%
+            }
+        %>
+        <input type="button" class="button" value="Назад" onclick="history.back();" />
     </div>
 </form>
 </body>

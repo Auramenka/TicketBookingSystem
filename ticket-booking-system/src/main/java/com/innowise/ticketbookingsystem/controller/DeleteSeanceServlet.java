@@ -1,5 +1,6 @@
 package com.innowise.ticketbookingsystem.controller;
 
+import com.innowise.ticketbookingsystem.model.Seance;
 import com.innowise.ticketbookingsystem.service.SeanceService;
 import com.innowise.ticketbookingsystem.service.impl.SeanceServiceImpl;
 import jakarta.servlet.ServletException;
@@ -9,32 +10,26 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.time.LocalDate;
-import java.time.LocalTime;
 
-@WebServlet("/addSeance")
-public class AddSeanceServlet extends HttpServlet {
+@WebServlet("/deleteSeance")
+public class DeleteSeanceServlet extends HttpServlet {
 
     private final SeanceService seanceService = new SeanceServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Long eventId = Long.parseLong(req.getParameter("eventId"));
-        req.setAttribute("eventId", eventId);
+        Long id = Long.parseLong(req.getParameter("id"));
+        Seance seance = seanceService.getSeanceById(id);
 
-        req.getRequestDispatcher("/addSeance.jsp").forward(req, resp);
+        req.setAttribute("seance", seance);
+        req.getRequestDispatcher("/deleteSeance.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LocalDate dateStart = LocalDate.parse(req.getParameter("dateStart"));
-        LocalTime timeStart = LocalTime.parse(req.getParameter("timeStart"));
-        Long eventId = Long.parseLong(req.getParameter("eventId"));
+        Long id = Long.parseLong(req.getParameter("id"));
+        seanceService.deleteServiceById(id);
 
-        seanceService.addSeance(dateStart, timeStart, eventId);
-
-        req.setAttribute("eventId", eventId);
-
-        req.getRequestDispatcher("/addSeanceSuccess.jsp").forward(req, resp);
+        resp.sendRedirect("/events");
     }
 }

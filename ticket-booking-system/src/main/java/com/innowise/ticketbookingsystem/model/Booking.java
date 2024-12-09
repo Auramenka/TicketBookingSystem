@@ -5,20 +5,23 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "seat_seance")
+@Table(name = "booking")
 @Getter
 @Setter
-public class SeatSeance {
+public class Booking {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "seance_id")
+    private Seance seance;
+
+    @ManyToOne
     @JoinColumn(name = "seat_id")
     private Seat seat;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "seance_id")
-    private Seance seance;
+    @Column(name = "is_occupied")
+    private Boolean isOccupied;
 }

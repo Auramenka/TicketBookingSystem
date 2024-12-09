@@ -14,8 +14,9 @@ public class SeatServiceImpl implements SeatService {
 
     private final SeatRepository seatRepository = new SeatRepositoryImpl();
 
-    public List<SeatDto> getSeats() {
-        List<Seat> allSeats = seatRepository.getAllSeats();
-        return allSeats.stream().map(SeatMapper::toDto).collect(Collectors.toList());
+    @Override
+    public List<SeatDto> getAvailableSeats(Long seanceId) {
+        return seatRepository.findAvailableSeats(seanceId)
+                .stream().map(SeatMapper::toDto).collect(Collectors.toList());
     }
 }

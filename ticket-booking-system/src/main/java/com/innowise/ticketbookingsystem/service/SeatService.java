@@ -6,5 +6,5 @@ import java.util.List;
 
 public interface SeatService {
 
-    List<SeatDto> getSeats();
+    List<SeatDto> getAvailableSeats(Long seanceId);
 }

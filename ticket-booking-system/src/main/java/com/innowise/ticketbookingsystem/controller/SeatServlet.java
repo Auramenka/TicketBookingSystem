@@ -19,9 +19,10 @@ public class SeatServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        List<SeatDto> seats = seatService.getSeats();
+        Long seanceId = Long.parseLong(req.getParameter("seanceId"));
+        List<SeatDto> availableSeats = seatService.getAvailableSeats(seanceId);
 
-        req.setAttribute("seats", seats);
-        req.getRequestDispatcher("seats.jsp").forward(req, resp);
+        req.setAttribute("seats", availableSeats);
+        req.getRequestDispatcher("/seats.jsp").forward(req, resp);
     }
 }

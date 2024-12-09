@@ -1,11 +1,10 @@
 package com.innowise.ticketbookingsystem.service;
 
 import com.innowise.ticketbookingsystem.dto.UserDto;
-import com.innowise.ticketbookingsystem.model.User;
 
 public interface UserService {
-    void registerUser(String username, String email, String password);
-    void updateUser(User user);
+    void registerUser(UserDto userDto);
+    void updateUser(UserDto userDto);
     void deleteUser(Long id);
     UserDto findByUsername(String username);
     UserDto findById(Long id);

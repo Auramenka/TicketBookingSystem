@@ -1,8 +1,10 @@
 package com.innowise.ticketbookingsystem.controller;
 
 import com.innowise.ticketbookingsystem.dto.SeanceDto;
+import com.innowise.ticketbookingsystem.model.Seance;
 import com.innowise.ticketbookingsystem.service.SeanceService;
 import com.innowise.ticketbookingsystem.service.impl.SeanceServiceImpl;
+import com.innowise.ticketbookingsystem.util.BookingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -31,6 +33,10 @@ public class SeanceServlet extends HttpServlet {
                 req.setAttribute("errorMessage", "Неверный ID мероприятия");
             }
         }
+
+        Seance seance = seanceService.getSeanceById(Long.parseLong(eventIdParam));
+        BookingUtil.put("seanceDate", seance.getDateStart());
+        BookingUtil.put("seanceTime", seance.getTimeStart());
 
         req.setAttribute("seances", seances);
         req.getRequestDispatcher("/seances.jsp").forward(req, resp);

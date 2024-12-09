@@ -50,6 +50,7 @@
             border-radius: 5px;
             border: none;
             cursor: pointer;
+            display: inline-block;
         }
         .login-button:hover {
             background-color: #0056b3;
@@ -85,8 +86,9 @@
         }
         .event .more-button {
             display: block;
-            width: 100px;
-            padding: 5px;
+            width: 100%;
+            max-width: 200px;
+            padding: 10px;
             background-color: #007bff;
             color: white;
             text-decoration: none;
@@ -95,7 +97,19 @@
             text-align: center;
         }
         .event .more-button:hover {
-            background-color: #0056b3;
+            opacity: 0.8;
+        }
+        .event .edit-button {
+            background-color: #28a745;
+        }
+        .event .edit-button:hover {
+            background-color: #218838;
+        }
+        .event .delete-button {
+            background-color: #dc3545;
+        }
+        .event .delete-button:hover {
+            background-color: #c82333;
         }
         .pagination {
             text-align: center;
@@ -122,6 +136,39 @@
         .header-title {
             margin-right: 20px;
         }
+        .filter-container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            margin: 20px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .filter-container label {
+            margin: 5px 0;
+        }
+        .filter-container input {
+            margin: 5px 0;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            max-width: 200px;
+        }
+        .filter-container button {
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .filter-container button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -129,7 +176,7 @@
 <div class="header">
     <div class="tabs">
         <%
-            UserDto user = (UserDto) session.getAttribute("user");
+            UserDto user = (UserDto) session.getAttribute("userDto");
             if (user == null) {
         %>
         <a href="?category=movies" class="tab">Кино</a>
@@ -145,6 +192,7 @@
         } else if (Role.ADMIN == user.getRole()) {
         %>
         <a href="/manageEvents" class="tab">Управление мероприятиями</a>
+        <a href="" class="tab">Список пользователей</a>
         <%
                 }
             }
@@ -165,8 +213,18 @@
     </div>
 </div>
 
-<div class="header-title-container">
-    <h1 class="header-title">Список мероприятий</h1>
+<div class="filter-container">
+    <form action="/events" method="get">
+        <div style="display: flex; align-items: center;">
+            <label for="startDate" style="margin-right: 10px;">С</label>
+            <input type="date" id="startDate" name="startDate" value="<%= request.getParameter("startDate") != null ? request.getParameter("startDate") : "" %>" style="margin-right: 20px;">
+
+            <label for="endDate" style="margin-right: 10px;">По</label>
+            <input type="date" id="endDate" name="endDate" value="<%= request.getParameter("endDate") != null ? request.getParameter("endDate") : "" %>" style="margin-right: 20px;">
+
+            <button type="submit">Применить</button>
+        </div>
+    </form>
 </div>
 
 <div class="event-container">
@@ -187,7 +245,8 @@
             <%
                 if (user != null && Role.ADMIN == user.getRole()) {
             %>
-            <a href="editEvent?id=<%= event.getId() %>" class="more-button">Редактирование</a>
+            <a href="editEvent?id=<%= event.getId() %>" class="more-button edit-button">Редактирование</a>
+            <a href="deleteEvent?id=<%= event.getId() %>" class="more-button delete-button"><x>Удаление</x></a>
             <%
                 }
             %>
@@ -202,6 +261,5 @@
         }
     %>
 </div>
-
 </body>
 </html>

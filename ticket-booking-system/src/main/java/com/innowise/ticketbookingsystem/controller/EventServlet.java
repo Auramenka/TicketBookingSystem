@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
 
 @WebServlet("/events")
@@ -21,9 +22,16 @@ public class EventServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String categoryParam = req.getParameter("category");
+        String startDateParam = req.getParameter("startDate");
+        String endDateParam = req.getParameter("endDate");
+
         List<EventDto> events;
 
-        if (categoryParam != null) {
+        if (startDateParam != null && endDateParam != null) {
+            LocalDate startDate = LocalDate.parse(startDateParam);
+            LocalDate endDate = LocalDate.parse(endDateParam);
+            events = eventService.getEventsByDateRange(startDate, endDate);
+        } else if (categoryParam != null) {
             Category category = Category.valueOf(categoryParam.toUpperCase());
             events = eventService.getEventsByCategory(category);
         } else {
