@@ -186,13 +186,13 @@
         } else {
             if (Role.USER == user.getRole()) {
         %>
-        <a href="myOrders.jsp" class="tab">Мои заказы</a>
+        <a href="bookingOrder?userId=<%= user.getId() %>" class="tab">Мои заказы</a>
         <a href="profile?userId=<%= user.getId() %>" class="tab">Профиль</a>
         <%
         } else if (Role.ADMIN == user.getRole()) {
         %>
         <a href="/manageEvents" class="tab">Управление мероприятиями</a>
-        <a href="" class="tab">Список пользователей</a>
+        <a href="/users?userId=<%= user.getId() %>" class="tab">Список пользователей</a>
         <%
                 }
             }

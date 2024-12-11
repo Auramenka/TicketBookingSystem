@@ -1,6 +1,6 @@
 package com.innowise.ticketbookingsystem.controller;
 
-import com.innowise.ticketbookingsystem.model.Seance;
+import com.innowise.ticketbookingsystem.dto.SeanceDto;
 import com.innowise.ticketbookingsystem.service.SeanceService;
 import com.innowise.ticketbookingsystem.service.impl.SeanceServiceImpl;
 import jakarta.servlet.ServletException;
@@ -19,9 +19,9 @@ public class DeleteSeanceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
-        Seance seance = seanceService.getSeanceById(id);
+        SeanceDto seanceDto = seanceService.getSeanceById(id);
 
-        req.setAttribute("seance", seance);
+        req.setAttribute("seance", seanceDto);
         req.getRequestDispatcher("/deleteSeance.jsp").forward(req, resp);
     }
 

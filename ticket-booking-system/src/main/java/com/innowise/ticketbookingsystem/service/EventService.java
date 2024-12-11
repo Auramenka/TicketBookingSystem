@@ -15,4 +15,5 @@ public interface EventService {
     EventDto getEventById(Long id);
     List<EventDto> getEvents();
     List<EventDto> getEventsByDateRange(LocalDate startDate, LocalDate endDate);
+    List<EventDto> getUpcomingEvents();
 }

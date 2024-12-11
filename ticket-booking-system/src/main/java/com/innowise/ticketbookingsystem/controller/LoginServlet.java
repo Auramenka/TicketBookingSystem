@@ -3,6 +3,7 @@ package com.innowise.ticketbookingsystem.controller;
 import com.innowise.ticketbookingsystem.dto.UserDto;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
+import com.innowise.ticketbookingsystem.util.BookingUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -25,6 +26,8 @@ public class LoginServlet extends HttpServlet {
 
         try {
             UserDto userDto = userService.findByUsername(username);
+
+            BookingUtil.put("userId", userDto.getId());
 
             if (!BCrypt.checkpw(password, userDto.getPassword())) {
                 req.setAttribute("passwordError", "Неверный пароль");

@@ -1,6 +1,5 @@
 package com.innowise.ticketbookingsystem.repository.impl;
 
-import com.innowise.ticketbookingsystem.model.Event;
 import com.innowise.ticketbookingsystem.model.Seance;
 import com.innowise.ticketbookingsystem.repository.SeanceRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;

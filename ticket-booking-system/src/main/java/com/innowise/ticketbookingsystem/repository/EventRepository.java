@@ -15,4 +15,5 @@ public interface EventRepository {
     List<Event> findByCategory(Category category);
     List<Event> getAllEvents();
     List<Event> findByDateRange(LocalDate startDate, LocalDate endDate);
+    List<Event> findUpcomingEvents(LocalDate today);
 }

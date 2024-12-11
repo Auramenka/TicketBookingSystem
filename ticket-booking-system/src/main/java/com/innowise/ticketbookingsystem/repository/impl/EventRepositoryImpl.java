@@ -99,4 +99,13 @@ public class EventRepositoryImpl implements EventRepository {
                     .getResultList();
         }
     }
+
+    @Override
+    public List<Event> findUpcomingEvents(LocalDate today) {
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery("FROM Event WHERE dateStart >= :today", Event.class)
+                    .setParameter("today", today)
+                    .getResultList();
+        }
+    }
 }

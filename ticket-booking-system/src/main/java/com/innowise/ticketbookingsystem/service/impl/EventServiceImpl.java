@@ -73,4 +73,13 @@ public class EventServiceImpl implements EventService {
                 .map(EventMapper::toDto)
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public List<EventDto> getUpcomingEvents() {
+        LocalDate today = LocalDate.now();
+        List<Event> events = eventRepository.findUpcomingEvents(today);
+        return events.stream()
+                .map(EventMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }

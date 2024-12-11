@@ -39,8 +39,8 @@ public class SeanceServiceImpl implements SeanceService {
         seanceRepository.deleteById(id);
     }
 
-    public Seance getSeanceById(Long seanceId) {
-        return seanceRepository.findById(seanceId);
+    public SeanceDto getSeanceById(Long seanceId) {
+        return SeanceMapper.toDto(seanceRepository.findById(seanceId));
     }
 
     public List<SeanceDto> getSeances() {

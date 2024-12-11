@@ -1,7 +1,7 @@
-<%@ page import="com.innowise.ticketbookingsystem.model.Seance" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.SeanceDto" %>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%
-  Seance seance = (Seance) request.getAttribute("seance");
+  SeanceDto seance = (SeanceDto) request.getAttribute("seance");
 %>
 <html>
 <head>

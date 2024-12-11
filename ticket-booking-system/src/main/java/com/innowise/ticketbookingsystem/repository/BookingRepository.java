@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface BookingRepository {
     void saveBooking(Booking booking);
+    Booking findById(Long id);
     List<Seat> getAvailableSeats(Seance seance);
 }

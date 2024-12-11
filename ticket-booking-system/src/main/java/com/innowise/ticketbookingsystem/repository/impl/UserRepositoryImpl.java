@@ -1,5 +1,6 @@
 package com.innowise.ticketbookingsystem.repository.impl;
 
+import com.innowise.ticketbookingsystem.model.Role;
 import com.innowise.ticketbookingsystem.model.User;
 import com.innowise.ticketbookingsystem.repository.UserRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;
@@ -57,7 +58,9 @@ public class UserRepositoryImpl implements UserRepository {
 
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("from User", User.class).list();
+            return session.createQuery("FROM User WHERE role = :role", User.class)
+                    .setParameter("role", Role.USER)
+                    .list();
         }
     }
 

@@ -5,9 +5,10 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class SeatDto {
+public class BookingDto {
 
     private Long id;
-    private Integer seatNumber;
-    private Integer rowNumber;
+    private Long seanceId;
+    private Long seatId;
+    private Boolean isOccupied;
 }

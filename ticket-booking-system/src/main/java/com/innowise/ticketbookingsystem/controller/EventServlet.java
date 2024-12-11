@@ -35,7 +35,7 @@ public class EventServlet extends HttpServlet {
             Category category = Category.valueOf(categoryParam.toUpperCase());
             events = eventService.getEventsByCategory(category);
         } else {
-            events = eventService.getEvents();
+            events = eventService.getUpcomingEvents();
         }
 
         req.setAttribute("events", events);

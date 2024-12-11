@@ -26,6 +26,7 @@ public class EventDetailServlet extends HttpServlet {
             Long eventId = Long.valueOf(eventIdParam);
             event = eventService.getEventById(eventId);
 
+            BookingUtil.put("eventId", eventId);
             BookingUtil.put("eventName", event.getName());
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Event ID is missing");

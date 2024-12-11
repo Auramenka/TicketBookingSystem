@@ -10,26 +10,21 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.List;
 
-@WebServlet("/profile")
-public class ProfileServlet extends HttpServlet {
+@WebServlet("/users")
+public class UserServlet extends HttpServlet {
 
     private final UserService userService = new UserServiceImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userIdParam = req.getParameter("userId");
-        UserDto user;
 
         if (userIdParam != null) {
-            Long userId = Long.valueOf(userIdParam);
-            user = userService.findById(userId);
-        } else {
-            resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Event ID is missing");
-            return;
+            List<UserDto> users = userService.getAllUsers();
+            req.setAttribute("users", users);
+            req.getRequestDispatcher("users.jsp").forward(req, resp);
         }
-
-        req.setAttribute("userDto", user);
-        req.getRequestDispatcher("/profile.jsp").forward(req, resp);
     }
 }

@@ -8,17 +8,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class EventMapper {
-    public static Event toEntity(EventDto eventDto) {
-        Event event = new Event();
-        event.setId(eventDto.getId());
-        event.setName(eventDto.getName());
-        event.setDescription(eventDto.getDescription());
-        event.setDateStart(eventDto.getDateStart());
-        event.setDateEnd(eventDto.getDateEnd());
-        event.setCategory(eventDto.getCategory());
-        event.setPhoto(eventDto.getPhoto());
-        return event;
-    }
 
     public static EventDto toDto(Event event) {
         EventDto eventDto = new EventDto();

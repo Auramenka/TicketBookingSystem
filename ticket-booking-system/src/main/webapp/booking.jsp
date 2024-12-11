@@ -1,8 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.Seat" %>
 <%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
+<%@ page import="com.innowise.ticketbookingsystem.dto.SeatDto" %>
 <%
   UserDto user = (UserDto) session.getAttribute("userDto");
 %>
@@ -74,13 +74,13 @@
   <input type="hidden" name="seanceId" value="<%= request.getAttribute("seanceId") %>" />
 
   <%
-    List<Seat> availableSeats = (List<Seat>) request.getAttribute("availableSeats");
+    List<SeatDto> availableSeats = (List<SeatDto>) request.getAttribute("availableSeats");
     if (availableSeats != null) {
-      for (Seat seat : availableSeats) {
+      for (SeatDto seatDto : availableSeats) {
   %>
   <div class="seat-option">
-    <input type="checkbox" name="seats" value="<%= seat.getId() %>" />
-    Ряд <%= seat.getRowNumber() %>, Место <%= seat.getSeatNumber() %>
+    <input type="checkbox" name="seats" value="<%= seatDto.getId() %>" />
+    Ряд <%= seatDto.getRowNumber() %>, Место <%= seatDto.getSeatNumber() %>
   </div>
   <%
       }

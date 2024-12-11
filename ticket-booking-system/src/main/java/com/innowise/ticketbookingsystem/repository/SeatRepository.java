@@ -6,8 +6,7 @@ import java.util.List;
 
 public interface SeatRepository {
 
+    Seat findById(Long id);
     List<Seat> findAvailableSeats(Long seanceId);
-    void updateSeatStatus(Long seatId);
 
-    List<Seat> getAllSeats();
 }

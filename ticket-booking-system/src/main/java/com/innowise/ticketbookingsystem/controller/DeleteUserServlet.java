@@ -11,8 +11,8 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet("/editProfile")
-public class EditUserProfile extends HttpServlet {
+@WebServlet("/deleteUser")
+public class DeleteUserServlet extends HttpServlet {
 
     private final UserService userService = new UserServiceImpl();
 
@@ -21,23 +21,14 @@ public class EditUserProfile extends HttpServlet {
         Long id = Long.parseLong(req.getParameter("id"));
         UserDto userDto = userService.findById(id);
 
-        req.setAttribute("userDto", userDto);
-        req.getRequestDispatcher("/editProfile.jsp").forward(req, resp);
+        req.setAttribute("user", userDto);
+        req.getRequestDispatcher("/deleteUser.jsp").forward(req, resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
-        String username = req.getParameter("username");
-        String email = req.getParameter("email");
-
-        UserDto userDto = userService.findById(id);
-
-        userDto.setId(id);
-        userDto.setUsername(username);
-        userDto.setEmail(email);
-
-        userService.updateUser(userDto);
+        userService.deleteUser(id);
 
         resp.sendRedirect("/events");
     }

@@ -8,13 +8,24 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.ValidatorFactory;
 
 import java.io.IOException;
+import java.util.Set;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
 
     private final UserService userService = new UserServiceImpl();
+    private final Validator validator;
+
+    public RegisterServlet() {
+        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+        this.validator = factory.getValidator();
+    }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
@@ -22,9 +33,20 @@ public class RegisterServlet extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        req.setAttribute("username", username);
-        req.setAttribute("email", email);
-        req.setAttribute("password", password);
+        UserDto userDto = new UserDto();
+        userDto.setUsername(username);
+        userDto.setEmail(email);
+        userDto.setPassword(password);
+
+        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
+
+        if (!violations.isEmpty()) {
+            for (ConstraintViolation<UserDto> violation : violations) {
+                req.setAttribute(violation.getPropertyPath().toString() + "Error", violation.getMessage());
+            }
+            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+            return;
+        }
 
         if (userService.isUsernameExists(username)) {
             req.setAttribute("usernameError", "Такое имя пользователя уже существует.");
@@ -37,17 +59,6 @@ public class RegisterServlet extends HttpServlet {
             req.getRequestDispatcher("/register.jsp").forward(req, resp);
             return;
         }
-
-        if (password.length() < 6) {
-            req.setAttribute("passwordError", "Пароль должен содержать не менее 6 символов");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
-            return;
-        }
-
-        UserDto userDto = new UserDto();
-        userDto.setUsername(username);
-        userDto.setEmail(email);
-        userDto.setPassword(password);
 
         userService.registerUser(userDto);
 

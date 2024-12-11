@@ -8,6 +8,9 @@ import com.innowise.ticketbookingsystem.repository.impl.UserRepositoryImpl;
 import com.innowise.ticketbookingsystem.service.UserService;
 import org.mindrot.jbcrypt.BCrypt;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository = new UserRepositoryImpl();
@@ -35,16 +38,28 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteById(id);
     }
 
+    @Override
+    public List<UserDto> getAllUsers() {
+        List<User> users = userRepository.getAllUsers();
+        return users.stream()
+                .map(UserMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username);
         if (user == null) {
-            throw new RuntimeException("Пользователь с именем '" + username + "' не найден");
+            throw new RuntimeException("Пользователь с именем " + username + " не найден");
         }
         return UserMapper.toDto(user);
     }
 
     public UserDto findById(Long id) {
-        return UserMapper.toDto(userRepository.findById(id));
+        User user = userRepository.findById(id);
+        if (user == null) {
+            throw new RuntimeException("Пользователь с id " + id + " не найден");
+        }
+        return UserMapper.toDto(user);
     }
 
     public boolean isUsernameExists(String username) {
