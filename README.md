@@ -105,3 +105,10 @@ Hibernate: ORM фреймворк для работы с базой данных
 например: /events?startDate=2024-12-03&endDate=2024-12-31 <br>
 Описание: фильтрация по дате, на главной странице необходимо выбрать желаемый промежуток времени (даты) <br>
 Страница с примененными фильтрами: /events.jsp
+
+# Запуск проекта:
+**1** Склонировать репозиторий git clone https://github.com/Auramenka/TicketBookingSystem.git <br>
+**2** Соберите проект (build) <br>
+**3** Сделать сборку контейнеров (docker-compose up) <br>
+**4** Перейти на главную страницу [http://localhost:8080/events](http://localhost:8080/events)
+
