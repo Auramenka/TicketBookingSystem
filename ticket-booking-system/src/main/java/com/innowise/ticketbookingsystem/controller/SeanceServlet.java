@@ -11,7 +11,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/seance")
@@ -21,22 +20,9 @@ public class SeanceServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String eventIdParam = req.getParameter("eventId");
-        List<SeanceDto> seances = new ArrayList<>();
+        List<SeanceDto> seances = BookingUtil.getSeances(req, seanceService);
 
-        if (eventIdParam != null) {
-            try {
-                Long eventId = Long.parseLong(eventIdParam);
-                seances = seanceService.getSeancesById(eventId);
-            } catch (NumberFormatException e) {
-                req.setAttribute("errorMessage", "Неверный ID мероприятия");
-            }
-        }
-
-        SeanceDto seanceDto = seanceService.getSeanceById(Long.parseLong(eventIdParam));
-        BookingUtil.put("seanceId", seanceDto.getId());
-        BookingUtil.put("seanceDate", seanceDto.getDateStart());
-        BookingUtil.put("seanceTime", seanceDto.getTimeStart());
+        BookingUtil.putSeanceAttributes(req, seances);
 
         req.setAttribute("seances", seances);
         req.getRequestDispatcher("/seances.jsp").forward(req, resp);

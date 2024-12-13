@@ -3,6 +3,8 @@ package com.innowise.ticketbookingsystem.controller;
 import com.innowise.ticketbookingsystem.dto.UserDto;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
+import com.innowise.ticketbookingsystem.util.MapperUtility;
+import com.innowise.ticketbookingsystem.util.ValidationUtility;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -29,34 +31,17 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
-        String username = req.getParameter("username");
-        String email = req.getParameter("email");
-        String password = req.getParameter("password");
+        UserDto userDto = MapperUtility.mapToUserDto(req);
 
-        UserDto userDto = new UserDto();
-        userDto.setUsername(username);
-        userDto.setEmail(email);
-        userDto.setPassword(password);
-
-        Set<ConstraintViolation<UserDto>> violations = validator.validate(userDto);
-
-        if (!violations.isEmpty()) {
-            for (ConstraintViolation<UserDto> violation : violations) {
-                req.setAttribute(violation.getPropertyPath().toString() + "Error", violation.getMessage());
-            }
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        if (ValidationUtility.validateUserDto(req, resp, userDto, validator)) {
             return;
         }
 
-        if (userService.isUsernameExists(username)) {
-            req.setAttribute("usernameError", "Такое имя пользователя уже существует.");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        if (ValidationUtility.checkUsernameExists(req, resp, userDto, userService)) {
             return;
         }
 
-        if (userService.isEmailExists(email)) {
-            req.setAttribute("emailError", "Такая электронная почта уже зарегистрирована.");
-            req.getRequestDispatcher("/register.jsp").forward(req, resp);
+        if (ValidationUtility.checkEmailExists(req, resp, userDto, userService)) {
             return;
         }
 

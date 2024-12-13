@@ -1,16 +1,25 @@
 package com.innowise.ticketbookingsystem.repository.impl;
 
-import com.innowise.ticketbookingsystem.model.Role;
+import com.innowise.ticketbookingsystem.exceptions.RollbackException;
+import com.innowise.ticketbookingsystem.exceptions.UserNotFoundException;
+import com.innowise.ticketbookingsystem.model.enums.Role;
 import com.innowise.ticketbookingsystem.model.User;
 import com.innowise.ticketbookingsystem.repository.UserRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 public class UserRepositoryImpl implements UserRepository {
+
+    private static final String GET_ALL_USERS_BY_ROLE = "FROM User WHERE role = :role";
+    private static final String GET_USER_BY_USERNAME = "FROM User WHERE username = :username";
+    private static final String GET_USER_BY_EMAIL = "FROM User WHERE email = :email";
 
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
@@ -21,8 +30,11 @@ public class UserRepositoryImpl implements UserRepository {
                 transaction = session.beginTransaction();
                 session.save(user);
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Error while saving user: {}", user, e);
             }
         }
     }
@@ -34,8 +46,11 @@ public class UserRepositoryImpl implements UserRepository {
                 transaction = session.beginTransaction();
                 session.update(user);
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Transaction rolled back while updating user: {}", user, e);
             }
         }
     }
@@ -46,19 +61,22 @@ public class UserRepositoryImpl implements UserRepository {
             try {
                 transaction = session.beginTransaction();
                 User user = session.get(User.class, id);
-                if (user != null) {
+                if (Objects.nonNull(user) ) {
                     session.delete(user);
                 }
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Transaction rolled back while deleting user with id: {}", id, e);
             }
         }
     }
 
     public List<User> getAllUsers() {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User WHERE role = :role", User.class)
+            return session.createQuery(GET_ALL_USERS_BY_ROLE, User.class)
                     .setParameter("role", Role.USER)
                     .list();
         }
@@ -66,7 +84,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User findByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User WHERE username = :username", User.class)
+            return session.createQuery(GET_USER_BY_USERNAME, User.class)
                     .setParameter("username", username)
                     .uniqueResult();
         }
@@ -74,7 +92,7 @@ public class UserRepositoryImpl implements UserRepository {
 
     public User findByEmail(String email) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM User WHERE email = :email", User.class)
+            return session.createQuery(GET_USER_BY_EMAIL, User.class)
                     .setParameter("email", email)
                     .uniqueResult();
         }
@@ -84,8 +102,9 @@ public class UserRepositoryImpl implements UserRepository {
         User user;
         try (Session session = sessionFactory.openSession()) {
             user = session.get(User.class, id);
-            if (user == null) {
-                System.out.println("User with id " + id + " not found.");
+            if (Objects.isNull(user)) {
+                log.error("User with id " + id + " not found.");
+                throw new UserNotFoundException("User with id " + id + " not found.");
             }
         }
         return user;

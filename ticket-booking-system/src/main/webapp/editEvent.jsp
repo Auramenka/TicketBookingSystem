@@ -38,17 +38,27 @@
             border: 1px solid #ccc;
             border-radius: 4px;
         }
-        input[type="submit"] {
-            background-color: #5cb85c;
-            color: white;
+        input[type="submit"], .back-button {
             padding: 10px 15px;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             font-size: 16px;
         }
+        input[type="submit"] {
+            background-color: #5cb85c;
+            color: white;
+        }
         input[type="submit"]:hover {
             background-color: #4cae4c;
+        }
+        .back-button {
+            background-color: #007bff;
+            color: white;
+            margin-right: 10px;
+        }
+        .back-button:hover {
+            background-color: #0069d9;
         }
     </style>
 </head>
@@ -76,6 +86,7 @@
     <input type="text" name="photo" value="<%= eventDto.getPhoto() %>" required/>
 
     <input type="submit" value="Обновить мероприятие"/>
+    <button type="button" class="back-button" onclick="window.history.back();">Назад</button>
 </form>
 </body>
 </html>

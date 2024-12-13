@@ -1,7 +1,7 @@
 package com.innowise.ticketbookingsystem.service;
 
 import com.innowise.ticketbookingsystem.dto.EventDto;
-import com.innowise.ticketbookingsystem.model.Category;
+import com.innowise.ticketbookingsystem.model.enums.Category;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -1,17 +1,21 @@
 package com.innowise.ticketbookingsystem.service.impl;
 
 import com.innowise.ticketbookingsystem.dto.EventDto;
+import com.innowise.ticketbookingsystem.exceptions.EventNotFoundException;
 import com.innowise.ticketbookingsystem.mappers.EventMapper;
-import com.innowise.ticketbookingsystem.model.Category;
+import com.innowise.ticketbookingsystem.model.enums.Category;
 import com.innowise.ticketbookingsystem.model.Event;
 import com.innowise.ticketbookingsystem.repository.EventRepository;
 import com.innowise.ticketbookingsystem.repository.impl.EventRepositoryImpl;
 import com.innowise.ticketbookingsystem.service.EventService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class EventServiceImpl implements EventService {
 
     private final EventRepository eventRepository = new EventRepositoryImpl();
@@ -33,7 +37,7 @@ public class EventServiceImpl implements EventService {
 
     public void updateEvent(EventDto eventDto) {
         Event event = eventRepository.findById(eventDto.getId());
-        if (event != null) {
+        if (!Objects.isNull(event)) {
             event.setId(eventDto.getId());
             event.setName(eventDto.getName());
             event.setDescription(eventDto.getDescription());
@@ -43,7 +47,8 @@ public class EventServiceImpl implements EventService {
             event.setPhoto(eventDto.getPhoto());
             eventRepository.update(event);
         } else {
-            throw new IllegalArgumentException("Мероприятие не найдено");
+            log.error("Мероприятие не найдено");
+            throw new EventNotFoundException("Мероприятие не найдено");
         }
     }
 

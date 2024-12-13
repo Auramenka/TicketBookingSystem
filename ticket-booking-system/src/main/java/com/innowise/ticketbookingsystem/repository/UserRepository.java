@@ -5,6 +5,7 @@ import com.innowise.ticketbookingsystem.model.User;
 import java.util.List;
 
 public interface UserRepository {
+
     void save(User user);
     void update(User user);
     void deleteById(Long id);

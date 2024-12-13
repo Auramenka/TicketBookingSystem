@@ -9,4 +9,5 @@ import java.util.List;
 public interface BookingService {
     BookingDto bookSeats(SeanceDto seanceDto, List<Long> seatIds);
     List<SeatDto> getAvailableSeats(SeanceDto seanceDto);
+    BookingDto bookSeatsAndGetSeatDetails(Long seanceId, String[] selectedSeats);
 }

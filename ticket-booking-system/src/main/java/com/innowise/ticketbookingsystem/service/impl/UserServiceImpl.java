@@ -1,16 +1,20 @@
 package com.innowise.ticketbookingsystem.service.impl;
 
 import com.innowise.ticketbookingsystem.dto.UserDto;
+import com.innowise.ticketbookingsystem.exceptions.UserNotFoundException;
 import com.innowise.ticketbookingsystem.mappers.UserMapper;
 import com.innowise.ticketbookingsystem.model.User;
 import com.innowise.ticketbookingsystem.repository.UserRepository;
 import com.innowise.ticketbookingsystem.repository.impl.UserRepositoryImpl;
 import com.innowise.ticketbookingsystem.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository = new UserRepositoryImpl();
@@ -24,13 +28,14 @@ public class UserServiceImpl implements UserService {
 
     public void updateUser(UserDto userDto) {
         User userFromDb = userRepository.findById(userDto.getId());
-        if (userFromDb != null) {
+        if (!Objects.isNull(userFromDb)) {
             userFromDb.setId(userDto.getId());
             userFromDb.setUsername(userDto.getUsername());
             userFromDb.setEmail(userDto.getEmail());
             userRepository.update(userFromDb);
         } else {
-            throw new IllegalArgumentException("Пользователь не найден");
+            log.error("Пользователь не найден");
+            throw new UserNotFoundException("Пользователь не найден");
         }
     }
 
@@ -48,16 +53,18 @@ public class UserServiceImpl implements UserService {
 
     public UserDto findByUsername(String username) {
         User user = userRepository.findByUsername(username);
-        if (user == null) {
-            throw new RuntimeException("Пользователь с именем " + username + " не найден");
+        if (Objects.isNull(user)) {
+            log.error("Пользователь с именем " + username + " не найден");
+            throw new UserNotFoundException("Пользователь с именем " + username + " не найден");
         }
         return UserMapper.toDto(user);
     }
 
     public UserDto findById(Long id) {
         User user = userRepository.findById(id);
-        if (user == null) {
-            throw new RuntimeException("Пользователь с id " + id + " не найден");
+        if (Objects.isNull(user)) {
+            log.error("Пользователь с id " + id + " не найден");
+            throw new UserNotFoundException("Пользователь с id " + id + " не найден");
         }
         return UserMapper.toDto(user);
     }

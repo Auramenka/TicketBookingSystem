@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet("/eventDetail")
 public class EventDetailServlet extends HttpServlet {
@@ -22,7 +23,7 @@ public class EventDetailServlet extends HttpServlet {
         String eventIdParam = req.getParameter("id");
         EventDto event;
 
-        if (eventIdParam != null) {
+        if (Objects.nonNull(eventIdParam)) {
             Long eventId = Long.valueOf(eventIdParam);
             event = eventService.getEventById(eventId);
 

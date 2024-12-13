@@ -28,7 +28,7 @@ public class DeleteSeanceServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
-        seanceService.deleteServiceById(id);
+        seanceService.deleteSeanceById(id);
 
         resp.sendRedirect("/events");
     }

@@ -1,6 +1,6 @@
 package com.innowise.ticketbookingsystem.repository;
 
-import com.innowise.ticketbookingsystem.model.Category;
+import com.innowise.ticketbookingsystem.model.enums.Category;
 import com.innowise.ticketbookingsystem.model.Event;
 
 import java.time.LocalDate;

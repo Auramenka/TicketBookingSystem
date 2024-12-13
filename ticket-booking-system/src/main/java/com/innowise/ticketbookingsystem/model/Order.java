@@ -1,5 +1,6 @@
 package com.innowise.ticketbookingsystem.model;
 
+import com.innowise.ticketbookingsystem.model.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;

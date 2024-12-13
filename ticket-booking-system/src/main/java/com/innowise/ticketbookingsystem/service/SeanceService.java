@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface SeanceService {
     void addSeance(LocalDate dateStart, LocalTime timeStart, Long eventId);
-    void deleteServiceById(Long id);
+    void deleteSeanceById(Long id);
     SeanceDto getSeanceById(Long seanceId);
     List<SeanceDto> getSeances();
     List<SeanceDto> getSeancesById(Long eventId);

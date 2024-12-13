@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
@@ -21,7 +22,7 @@ public class ProfileServlet extends HttpServlet {
         String userIdParam = req.getParameter("userId");
         UserDto user;
 
-        if (userIdParam != null) {
+        if (Objects.nonNull(userIdParam)) {
             Long userId = Long.valueOf(userIdParam);
             user = userService.findById(userId);
         } else {

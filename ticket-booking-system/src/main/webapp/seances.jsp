@@ -3,7 +3,7 @@
 <%@ page import="com.innowise.ticketbookingsystem.dto.SeanceDto" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.enums.Role" %>
 <%
     Long eventId = Long.parseLong(request.getParameter("eventId"));
 %>

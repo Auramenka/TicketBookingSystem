@@ -1,29 +1,42 @@
 package com.innowise.ticketbookingsystem.repository.impl;
 
-import com.innowise.ticketbookingsystem.model.Category;
+import com.innowise.ticketbookingsystem.exceptions.EventNotFoundException;
+import com.innowise.ticketbookingsystem.exceptions.RollbackException;
+import com.innowise.ticketbookingsystem.model.enums.Category;
 import com.innowise.ticketbookingsystem.model.Event;
 import com.innowise.ticketbookingsystem.repository.EventRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 public class EventRepositoryImpl implements EventRepository {
 
-    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-    public void save(Event event) {
+    private static final String SELECT_ALL_EVENTS = "FROM Event";
+    private static final String SELECT_EVENTS_BY_CATEGORY = "FROM Event WHERE category = :category";
+    private static final String SELECT_EVENTS_BY_DATE_RANGE = "FROM Event WHERE dateStart >= :startDate AND dateEnd <= :endDate";
+    private static final String SELECT_UPCOMING_EVENTS = "FROM Event WHERE dateStart >= :today";
 
+    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
+    public void save(Event event) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = null;
             try {
                 transaction = session.beginTransaction();
                 session.save(event);
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Rollback occurred while saving event: {}", event, e);
             }
         }
     }
@@ -35,15 +48,18 @@ public class EventRepositoryImpl implements EventRepository {
             try {
                 transaction = session.beginTransaction();
                 Event event = session.get(Event.class, id);
-                if (event != null) {
+                if (Objects.nonNull(event)) {
                     session.delete(event);
                 } else {
-                    System.out.println("Event with id " + id + " not found.");
+                    log.error("Event with id " + id + " not found.");
+                    throw new EventNotFoundException("Event with id " + id + " not found.");
                 }
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
-                e.printStackTrace();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Rollback occurred while deleting event with id {}: {}", id, e);
             }
         }
     }
@@ -56,9 +72,11 @@ public class EventRepositoryImpl implements EventRepository {
                 transaction = session.beginTransaction();
                 session.update(event);
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
-                e.printStackTrace();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Rollback occurred while updating event: {}", event, e);
             }
         }
     }
@@ -68,8 +86,9 @@ public class EventRepositoryImpl implements EventRepository {
         Event event;
         try (Session session = sessionFactory.openSession()) {
             event = session.get(Event.class, id);
-            if (event == null) {
-                System.out.println("Event with id " + id + " not found.");
+            if (Objects.isNull(event)) {
+                log.error("Event with id " + id + " not found.");
+                throw new EventNotFoundException("Event with id " + id + " not found.");
             }
         }
         return event;
@@ -77,23 +96,22 @@ public class EventRepositoryImpl implements EventRepository {
 
     public List<Event> findByCategory(Category category) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Event WHERE category = :category", Event.class)
+            return session.createQuery(SELECT_EVENTS_BY_CATEGORY, Event.class)
                         .setParameter("category", category)
                         .getResultList();
         }
-
     }
 
     public List<Event> getAllEvents() {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Event", Event.class).list();
+            return session.createQuery(SELECT_ALL_EVENTS, Event.class).list();
         }
     }
 
     @Override
     public List<Event> findByDateRange(LocalDate startDate, LocalDate endDate) {
         try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("FROM Event WHERE dateStart >= :startDate AND dateEnd <= :endDate", Event.class)
+            return session.createQuery(SELECT_EVENTS_BY_DATE_RANGE, Event.class)
                     .setParameter("startDate", startDate)
                     .setParameter("endDate", endDate)
                     .getResultList();
@@ -103,7 +121,7 @@ public class EventRepositoryImpl implements EventRepository {
     @Override
     public List<Event> findUpcomingEvents(LocalDate today) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery("FROM Event WHERE dateStart >= :today", Event.class)
+            return session.createQuery(SELECT_UPCOMING_EVENTS, Event.class)
                     .setParameter("today", today)
                     .getResultList();
         }

@@ -3,6 +3,7 @@ package com.innowise.ticketbookingsystem.controller;
 import com.innowise.ticketbookingsystem.dto.UserDto;
 import com.innowise.ticketbookingsystem.service.UserService;
 import com.innowise.ticketbookingsystem.service.impl.UserServiceImpl;
+import com.innowise.ticketbookingsystem.util.MapperUtility;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -28,14 +29,10 @@ public class EditUserProfile extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         Long id = Long.parseLong(req.getParameter("id"));
-        String username = req.getParameter("username");
-        String email = req.getParameter("email");
 
         UserDto userDto = userService.findById(id);
 
-        userDto.setId(id);
-        userDto.setUsername(username);
-        userDto.setEmail(email);
+        MapperUtility.mapRequestToUserDto(req, userDto);
 
         userService.updateUser(userDto);
 

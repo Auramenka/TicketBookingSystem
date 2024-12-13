@@ -2,7 +2,7 @@
 <%@ page import="java.util.List" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.EventDto" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.enums.Role" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <!DOCTYPE html>
 <html lang="ru">
@@ -186,7 +186,7 @@
         } else {
             if (Role.USER == user.getRole()) {
         %>
-        <a href="bookingOrder?userId=<%= user.getId() %>" class="tab">Мои заказы</a>
+        <a href="order?userId=<%= user.getId() %>" class="tab">Мои заказы</a>
         <a href="profile?userId=<%= user.getId() %>" class="tab">Профиль</a>
         <%
         } else if (Role.ADMIN == user.getRole()) {

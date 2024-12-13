@@ -61,21 +61,21 @@
   </style>
 </head>
 <body>
-<h2>Add New Seance</h2>
+<h2>Добавить сеанс</h2>
 <form action="/addSeance" method="post">
   <input type="hidden" id="eventId" name="eventId" value="${param.eventId}">
 
   <div class="form-group">
-    <label for="dateStart">Date Start:</label>
+    <label for="dateStart">Дата начала:</label>
     <input type="date" id="dateStart" name="dateStart" required>
   </div>
 
   <div class="form-group">
-    <label for="timeStart">Time Start:</label>
+    <label for="timeStart">Время начала:</label>
     <input type="time" id="timeStart" name="timeStart" required>
   </div>
 
-  <input type="submit" value="Add Seance">
+  <input type="submit" value="Добавить">
 </form>
 </body>
 </html>

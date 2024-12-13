@@ -1,15 +1,23 @@
 package com.innowise.ticketbookingsystem.repository.impl;
 
+import com.innowise.ticketbookingsystem.exceptions.RollbackException;
+import com.innowise.ticketbookingsystem.exceptions.SeanceNotFoundException;
 import com.innowise.ticketbookingsystem.model.Seance;
 import com.innowise.ticketbookingsystem.repository.SeanceRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 import java.util.List;
+import java.util.Objects;
 
+@Slf4j
 public class SeanceRepositoryImpl implements SeanceRepository {
+
+    private static final String GET_ALL_SEANCES = "from Seance";
+    private static final String GET_SEANCES_BY_EVENT_ID = "from Seance where event.id = :eventId";
 
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
@@ -21,8 +29,11 @@ public class SeanceRepositoryImpl implements SeanceRepository {
                 transaction = session.beginTransaction();
                 session.save(seance);
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Error while saving seance: {}", e.getMessage(), e);
             }
         }
     }
@@ -34,15 +45,18 @@ public class SeanceRepositoryImpl implements SeanceRepository {
             try {
                 transaction = session.beginTransaction();
                 Seance seance = session.get(Seance.class, id);
-                if (seance != null) {
+                if (Objects.nonNull(seance)) {
                     session.delete(seance);
                 } else {
-                    System.out.println("Seance with id " + id + " not found.");
+                    log.error("Seance with id " + id + " not found.");
+                    throw new SeanceNotFoundException("Seance with id " + id + " not found.");
                 }
                 transaction.commit();
-            } catch (Exception e) {
-                if (transaction != null) transaction.rollback();
-                e.printStackTrace();
+            } catch (RollbackException e) {
+                if (Objects.nonNull(transaction)) {
+                    transaction.rollback();
+                }
+                log.error("Error while deleting seance with id {}: {}", id, e.getMessage(), e);
             }
         }
     }
@@ -51,22 +65,23 @@ public class SeanceRepositoryImpl implements SeanceRepository {
         Seance seance;
         try (Session session = sessionFactory.openSession()) {
             seance = session.get(Seance.class, seanceId);
-            if (seance == null) {
-                System.out.println("Seance with id " + seanceId + " not found.");
+            if (Objects.isNull(seance)) {
+                log.error("Seance with id " + seanceId + " not found.");
+                throw new SeanceNotFoundException("Seance with id " + seanceId + " not found.");
             }
         }
         return seance;
     }
 
     public List<Seance> getAllSeances() {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Seance ", Seance.class).list();
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(GET_ALL_SEANCES, Seance.class).list();
         }
     }
 
     public List<Seance> getSeancesByEventId(Long eventId) {
-        try (Session session = HibernateUtil.getSessionFactory().openSession()) {
-            return session.createQuery("from Seance where event.id = :eventId", Seance.class)
+        try (Session session = sessionFactory.openSession()) {
+            return session.createQuery(GET_SEANCES_BY_EVENT_ID, Seance.class)
                     .setParameter("eventId", eventId)
                     .list();
         }

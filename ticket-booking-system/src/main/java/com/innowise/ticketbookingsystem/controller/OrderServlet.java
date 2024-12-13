@@ -2,10 +2,10 @@ package com.innowise.ticketbookingsystem.controller;
 
 import com.innowise.ticketbookingsystem.dto.OrderDto;
 import com.innowise.ticketbookingsystem.dto.UserDto;
-import com.innowise.ticketbookingsystem.model.OrderStatus;
 import com.innowise.ticketbookingsystem.service.OrderService;
 import com.innowise.ticketbookingsystem.service.impl.OrderServiceImpl;
 import com.innowise.ticketbookingsystem.util.BookingUtil;
+import com.innowise.ticketbookingsystem.util.MapperUtility;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -14,8 +14,9 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
-@WebServlet("/bookingOrder")
+@WebServlet("/order")
 public class OrderServlet extends HttpServlet {
 
     private final OrderService orderService = new OrderServiceImpl();
@@ -23,10 +24,9 @@ public class OrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         UserDto userDto = (UserDto) req.getSession().getAttribute("userDto");
-        Long userId = userDto.getId();
 
-        if (userId != null) {
-            List<OrderDto> orders = orderService.getOrdersByUserId(userId);
+        if (Objects.nonNull(userDto) && Objects.nonNull(userDto.getId())) {
+            List<OrderDto> orders = orderService.getOrdersByUserId(userDto.getId());
             req.setAttribute("orders", orders);
             req.getRequestDispatcher("myOrders.jsp").forward(req, resp);
         } else {
@@ -39,26 +39,16 @@ public class OrderServlet extends HttpServlet {
         String action = req.getParameter("action");
         UserDto userDto = (UserDto) req.getSession().getAttribute("userDto");
         Long userId = userDto.getId();
-        Long eventId = (Long) BookingUtil.get("eventId");
-        Long bookingId = (Long) BookingUtil.get("bookingId");
 
-        OrderStatus status;
-        if ("buy".equals(action)) {
-            status = OrderStatus.PURCHASE;
-        } else if ("reserve".equals(action)) {
-            status = OrderStatus.BOOKING;
-        } else {
+        OrderDto orderDto = MapperUtility.mapToOrderDto(req, action, userId);
+        if (Objects.isNull(orderDto)) {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Unknown action");
             return;
         }
 
-        OrderDto orderDto = new OrderDto();
-        orderDto.setOrderStatus(status);
-        orderDto.setUserId(userId);
-        orderDto.setEventId(eventId);
-        orderDto.setBookingId(bookingId);
-
         orderService.createOrder(orderDto);
         req.getRequestDispatcher("orderConfirmation.jsp").forward(req, resp);
+
+        BookingUtil.clear();
     }
 }

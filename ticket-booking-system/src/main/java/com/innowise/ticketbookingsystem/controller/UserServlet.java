@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 @WebServlet("/users")
 public class UserServlet extends HttpServlet {
@@ -21,7 +22,7 @@ public class UserServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String userIdParam = req.getParameter("userId");
 
-        if (userIdParam != null) {
+        if (Objects.nonNull(userIdParam)) {
             List<UserDto> users = userService.getAllUsers();
             req.setAttribute("users", users);
             req.getRequestDispatcher("users.jsp").forward(req, resp);

@@ -1,6 +1,7 @@
 package com.innowise.ticketbookingsystem.service.impl;
 
 import com.innowise.ticketbookingsystem.dto.SeanceDto;
+import com.innowise.ticketbookingsystem.exceptions.EventNotFoundException;
 import com.innowise.ticketbookingsystem.mappers.SeanceMapper;
 import com.innowise.ticketbookingsystem.model.Event;
 import com.innowise.ticketbookingsystem.model.Seance;
@@ -9,12 +10,15 @@ import com.innowise.ticketbookingsystem.repository.SeanceRepository;
 import com.innowise.ticketbookingsystem.repository.impl.EventRepositoryImpl;
 import com.innowise.ticketbookingsystem.repository.impl.SeanceRepositoryImpl;
 import com.innowise.ticketbookingsystem.service.SeanceService;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class SeanceServiceImpl implements SeanceService {
 
     private final SeanceRepository seanceRepository = new SeanceRepositoryImpl();
@@ -26,16 +30,17 @@ public class SeanceServiceImpl implements SeanceService {
         seance.setTimeStart(timeStart);
 
         Event event = eventRepository.findById(eventId);
-        if (event != null) {
+        if (!Objects.isNull(event)) {
             seance.setEvent(event);
             seanceRepository.save(seance);
         } else {
-            throw new IllegalArgumentException("Event not found with ID: " + eventId);
+            log.error("Event not found with ID: " + eventId);
+            throw new EventNotFoundException("Event not found with ID: " + eventId);
         }
     }
 
     @Override
-    public void deleteServiceById(Long id) {
+    public void deleteSeanceById(Long id) {
         seanceRepository.deleteById(id);
     }
 
@@ -56,5 +61,4 @@ public class SeanceServiceImpl implements SeanceService {
                 .map(SeanceMapper::toDto)
                 .collect(Collectors.toList());
     }
-
 }

@@ -1,6 +1,6 @@
 package com.innowise.ticketbookingsystem.dto;
 
-import com.innowise.ticketbookingsystem.model.Category;
+import com.innowise.ticketbookingsystem.model.enums.Category;
 import lombok.Getter;
 import lombok.Setter;
 

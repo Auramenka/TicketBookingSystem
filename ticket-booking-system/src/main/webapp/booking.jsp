@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ page import="java.util.List" %>
-<%@ page import="com.innowise.ticketbookingsystem.model.Role" %>
+<%@ page import="com.innowise.ticketbookingsystem.model.enums.Role" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.UserDto" %>
 <%@ page import="com.innowise.ticketbookingsystem.dto.SeatDto" %>
 <%
@@ -69,7 +69,7 @@
   </style>
 </head>
 <body>
-<h1>Выберите места</h1>
+<h1>Выберите место</h1>
 <form action="bookSeats" method="post">
   <input type="hidden" name="seanceId" value="<%= request.getAttribute("seanceId") %>" />
 

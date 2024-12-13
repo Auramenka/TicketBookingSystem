@@ -56,7 +56,7 @@
 <body>
 <div class="form-container">
     <h2>Подтверждение заказа</h2>
-    <form action="/bookingOrder" method="post">
+    <form action="/order" method="post">
         <div class="form-group">
             <label for="name">Название мероприятия:</label>
             <input type="text" name="name" value="<%= BookingUtil.get("eventName") %>" readonly>

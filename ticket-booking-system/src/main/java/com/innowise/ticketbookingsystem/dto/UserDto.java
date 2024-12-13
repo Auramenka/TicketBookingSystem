@@ -1,6 +1,6 @@
 package com.innowise.ticketbookingsystem.dto;
 
-import com.innowise.ticketbookingsystem.model.Role;
+import com.innowise.ticketbookingsystem.model.enums.Role;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.Email;
