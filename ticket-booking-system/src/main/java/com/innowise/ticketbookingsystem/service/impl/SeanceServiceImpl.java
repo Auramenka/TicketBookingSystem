@@ -12,8 +12,6 @@ import com.innowise.ticketbookingsystem.repository.impl.SeanceRepositoryImpl;
 import com.innowise.ticketbookingsystem.service.SeanceService;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -24,13 +22,15 @@ public class SeanceServiceImpl implements SeanceService {
     private final SeanceRepository seanceRepository = new SeanceRepositoryImpl();
     private final EventRepository eventRepository = new EventRepositoryImpl();
 
-    public void addSeance(LocalDate dateStart, LocalTime timeStart, Long eventId) {
+    public void addSeance(SeanceDto seanceDto) {
         Seance seance = new Seance();
-        seance.setDateStart(dateStart);
-        seance.setTimeStart(timeStart);
+        seance.setDateStart(seanceDto.getDateStart());
+        seance.setTimeStart(seanceDto.getTimeStart());
+
+        Long eventId = seanceDto.getEventId();
 
         Event event = eventRepository.findById(eventId);
-        if (!Objects.isNull(event)) {
+        if (Objects.nonNull(event)) {
             seance.setEvent(event);
             seanceRepository.save(seance);
         } else {

@@ -10,13 +10,11 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
 import jakarta.validation.ValidatorFactory;
 
 import java.io.IOException;
-import java.util.Set;
 
 @WebServlet("/register")
 public class RegisterServlet extends HttpServlet {
@@ -33,15 +31,9 @@ public class RegisterServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException, ServletException {
         UserDto userDto = MapperUtility.mapToUserDto(req);
 
-        if (ValidationUtility.validateUserDto(req, resp, userDto, validator)) {
-            return;
-        }
-
-        if (ValidationUtility.checkUsernameExists(req, resp, userDto, userService)) {
-            return;
-        }
-
-        if (ValidationUtility.checkEmailExists(req, resp, userDto, userService)) {
+        if (ValidationUtility.validateUserDto(req, resp, userDto, validator)
+                || ValidationUtility.checkUsernameExists(req, resp, userDto, userService)
+                || ValidationUtility.checkEmailExists(req, resp, userDto, userService)) {
             return;
         }
 

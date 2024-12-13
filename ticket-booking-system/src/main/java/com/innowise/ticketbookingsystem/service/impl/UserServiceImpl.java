@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     public void updateUser(UserDto userDto) {
         User userFromDb = userRepository.findById(userDto.getId());
-        if (!Objects.isNull(userFromDb)) {
+        if (Objects.nonNull(userFromDb)) {
             userFromDb.setId(userDto.getId());
             userFromDb.setUsername(userDto.getUsername());
             userFromDb.setEmail(userDto.getEmail());
@@ -52,7 +52,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findUserByUsername(username);
         if (Objects.isNull(user)) {
             log.error("Пользователь с именем " + username + " не найден");
             throw new UserNotFoundException("Пользователь с именем " + username + " не найден");
@@ -70,10 +70,10 @@ public class UserServiceImpl implements UserService {
     }
 
     public boolean isUsernameExists(String username) {
-        return userRepository.findByUsername(username) != null;
+        return userRepository.findByUsername(username);
     }
 
     public boolean isEmailExists(String email) {
-        return userRepository.findByEmail(email) != null;
+        return userRepository.findByEmail(email);
     }
 }

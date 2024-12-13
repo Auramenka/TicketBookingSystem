@@ -3,19 +3,16 @@ package com.innowise.ticketbookingsystem.repository.impl;
 import com.innowise.ticketbookingsystem.dto.OrderDto;
 import com.innowise.ticketbookingsystem.exceptions.RollbackException;
 import com.innowise.ticketbookingsystem.model.Order;
-import com.innowise.ticketbookingsystem.model.enums.OrderStatus;
 import com.innowise.ticketbookingsystem.repository.OrderRepository;
 import com.innowise.ticketbookingsystem.util.HibernateUtil;
+import com.innowise.ticketbookingsystem.util.MapperUtility;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
-
-import java.sql.Date;
-import java.sql.Time;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Slf4j
 public class OrderRepositoryImpl implements OrderRepository {
@@ -52,25 +49,9 @@ public class OrderRepositoryImpl implements OrderRepository {
                     .setParameter("userId", userId)
                     .getResultList();
 
-            List<OrderDto> orders = new ArrayList<>();
-            for (Object[] result : results) {
-                OrderDto dto = createOrderDto(result, userId);
-                orders.add(dto);
-            }
-            return orders;
+            return results.stream()
+                    .map(result -> MapperUtility.createOrderDto(result, userId))
+                    .collect(Collectors.toList());
         }
-    }
-
-    private OrderDto createOrderDto(Object[] result, Long userId) {
-        OrderDto orderDto = new OrderDto();
-        orderDto.setId(userId);
-        orderDto.setEventName((String) result[0]);
-        orderDto.setEventDate(((Date) result[1]).toLocalDate());
-        orderDto.setEventTime(((Time) result[2]).toLocalTime());
-        orderDto.setSeatInfo("Ряд: " + result[3] + " ; номер: " + result[4]);
-
-        String statusValue = (String) result[5];
-        orderDto.setOrderStatus(OrderStatus.valueOf(statusValue));
-        return orderDto;
     }
 }

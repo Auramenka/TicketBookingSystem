@@ -10,7 +10,8 @@ public interface UserRepository {
     void update(User user);
     void deleteById(Long id);
     List<User> getAllUsers();
-    User findByUsername(String username);
-    User findByEmail(String email);
+    User findUserByUsername(String username);
+    boolean findByUsername(String username);
+    boolean findByEmail(String email);
     User findById(Long id);
 }

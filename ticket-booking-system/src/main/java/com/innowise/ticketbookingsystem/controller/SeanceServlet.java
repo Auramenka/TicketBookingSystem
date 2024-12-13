@@ -22,7 +22,7 @@ public class SeanceServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<SeanceDto> seances = BookingUtil.getSeances(req, seanceService);
 
-        BookingUtil.putSeanceAttributes(req, seances);
+        BookingUtil.putSeanceAttributes(seances);
 
         req.setAttribute("seances", seances);
         req.getRequestDispatcher("/seances.jsp").forward(req, resp);

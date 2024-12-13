@@ -23,8 +23,7 @@ public class ProfileServlet extends HttpServlet {
         UserDto user;
 
         if (Objects.nonNull(userIdParam)) {
-            Long userId = Long.valueOf(userIdParam);
-            user = userService.findById(userId);
+            user = userService.findById(Long.valueOf(userIdParam));
         } else {
             resp.sendError(HttpServletResponse.SC_BAD_REQUEST, "Event ID is missing");
             return;

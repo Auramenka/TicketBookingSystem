@@ -18,8 +18,9 @@ import java.util.Objects;
 public class UserRepositoryImpl implements UserRepository {
 
     private static final String GET_ALL_USERS_BY_ROLE = "FROM User WHERE role = :role";
+    private static final String CHECK_IF_USER_EXISTS_BY_USERNAME = "SELECT EXISTS (SELECT 1 FROM users WHERE username = :username)";
+    private static final String CHECK_IF_USER_EXISTS_BY_EMAIL = "SELECT EXISTS (SELECT 1 FROM users WHERE email = :email)";
     private static final String GET_USER_BY_USERNAME = "FROM User WHERE username = :username";
-    private static final String GET_USER_BY_EMAIL = "FROM User WHERE email = :email";
 
     SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 
@@ -82,7 +83,7 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    public User findByUsername(String username) {
+    public User findUserByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
             return session.createQuery(GET_USER_BY_USERNAME, User.class)
                     .setParameter("username", username)
@@ -90,9 +91,17 @@ public class UserRepositoryImpl implements UserRepository {
         }
     }
 
-    public User findByEmail(String email) {
+    public boolean findByUsername(String username) {
         try (Session session = sessionFactory.openSession()) {
-            return session.createQuery(GET_USER_BY_EMAIL, User.class)
+            return (boolean) session.createNativeQuery(CHECK_IF_USER_EXISTS_BY_USERNAME)
+                    .setParameter("username", username)
+                    .uniqueResult();
+        }
+    }
+
+    public boolean findByEmail(String email) {
+        try (Session session = sessionFactory.openSession()) {
+            return (boolean) session.createNativeQuery(CHECK_IF_USER_EXISTS_BY_EMAIL)
                     .setParameter("email", email)
                     .uniqueResult();
         }

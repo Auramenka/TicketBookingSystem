@@ -37,7 +37,7 @@ public class EventServiceImpl implements EventService {
 
     public void updateEvent(EventDto eventDto) {
         Event event = eventRepository.findById(eventDto.getId());
-        if (!Objects.isNull(event)) {
+        if (Objects.nonNull(event)) {
             event.setId(eventDto.getId());
             event.setName(eventDto.getName());
             event.setDescription(eventDto.getDescription());

@@ -18,6 +18,7 @@ import com.innowise.ticketbookingsystem.util.BookingUtil;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 public class BookingServiceImpl implements BookingService {
@@ -28,14 +29,10 @@ public class BookingServiceImpl implements BookingService {
 
     public BookingDto bookSeats(SeanceDto seanceDto, List<Long> seatIds) {
         Booking booking = new Booking();
-        for (Long seatId : seatIds) {
-            Seat seat = new Seat();
-            seat.setId(seatId);
-            booking.setSeance(SeanceMapper.toEntity(seanceDto));
-            booking.setSeat(seat);
-            booking.setIsOccupied(true);
-            bookingRepository.saveBooking(booking);
-        }
+        booking.setSeance(SeanceMapper.toEntity(seanceDto));
+
+        seatIds.forEach(seatId -> createAndSaveBooking(booking, seatId));
+
         return BookingMapper.toDto(booking);
     }
 
@@ -49,7 +46,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto bookSeatsAndGetSeatDetails(Long seanceId, String[] selectedSeats) {
         BookingDto bookingDto = null;
         List<String> seatDetails = new ArrayList<>();
-        if (selectedSeats != null) {
+        if (Objects.nonNull(selectedSeats)) {
             List<Long> seatIds = Arrays.stream(selectedSeats).map(Long::parseLong).collect(Collectors.toList());
             SeanceDto seanceDto = seanceService.getSeanceById(seanceId);
             seanceDto.setId(seanceId);
@@ -63,5 +60,13 @@ public class BookingServiceImpl implements BookingService {
 
         BookingUtil.put("seats", seatDetails);
         return bookingDto;
+    }
+
+    private void createAndSaveBooking(Booking booking, Long seatId) {
+        Seat seat = new Seat();
+        seat.setId(seatId);
+        booking.setSeat(seat);
+        booking.setIsOccupied(true);
+        bookingRepository.saveBooking(booking);
     }
 }
